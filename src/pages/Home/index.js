@@ -1,8 +1,20 @@
 import './style.css';
-import { home } from '../../mocks/Home';
+import { menu } from '../../mocks/Menu';
 
 export function Home() {
   return (
-    <h1>{home.hello}</h1>
+    <ul>
+      {menu.map((item) => (
+        <li>
+          <br/>
+          {item.name}
+          <br/>
+          {item.prepTime}
+          <br/>
+          R${item.price}
+          <br/>
+        </li>
+      ))}
+    </ul>
   );
 }
