@@ -1,14 +1,50 @@
-class Order {
+import { Product } from './product';
+
+export class Order {
   #number;
   #items;
-  #preparationTime;
+  #price;
+  #prepTime;
   #finalizationTime;
 
-  constructor(_number, _items, _preparationTime, _finalizationTime) {
+  constructor(_number, _items) {
     this.#number = _number;
     this.#items = _items;
-    this.#preparationTime = _preparationTime;
-    this.#finalizationTime = _finalizationTime;
+    this.#price = this.calculatePrice();
+    this.#prepTime = this.calculatePrepTime();
+    this.#finalizationTime = this.getFormattedTime(this.calculateFinalizationTime());
+  }
+
+  calculateFinalizationTime() {
+    const now = new Date();
+    const finalizationTime = new Date(now.getTime() + this.getPrepTime() * 60000);
+    return finalizationTime;
+  }
+
+  getFormattedTime(date) {
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+
+    const formattedHours = hours < 10 ? `0${hours}` : hours;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+    return `${formattedHours}:${formattedMinutes}`;
+  }
+
+  calculatePrice() {
+    let finalPrice = 0;
+    this.#items.forEach((product) => {
+      finalPrice += product.getPrice();
+    });
+    return finalPrice;
+  }
+
+  calculatePrepTime() {
+    let totalPrepTime = 0;
+    this.#items.forEach((product) => {
+      totalPrepTime += product.getPrepTime();
+    });
+    return totalPrepTime;
   }
 
   getNumber() {
@@ -23,23 +59,15 @@ class Order {
     return this.#items;
   }
 
-  setItems(_newItems) {
-    this.#number = _newItems;
+  getPrice() {
+    return this.#price;
   }
 
-  getPreparationTIme() {
-    return this.#preparationTime;
-  }
-
-  setPreparationTime(_newPreparationTime) {
-    this.#preparationTime = _newPreparationTime;
+  getPrepTime() {
+    return this.#prepTime;
   }
 
   getFinalizationTime() {
     return this.#finalizationTime;
-  }
-
-  setFinalizationTime(_newFinalizationTime) {
-    this.#finalizationTime = _newFinalizationTime;
   }
 }
